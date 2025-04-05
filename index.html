@@ -115,6 +115,13 @@
       font-size: 1.75rem;
       font-weight: 600;
       color: #4A00E0;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-icon {
+      height: 28px;
+      margin-right: 10px;
     }
 
     nav a {
@@ -327,7 +334,10 @@
 </head>
 <body>
   <header>
-    <div class="logo">EchoForge</div>
+    <div class="logo">
+      <img src="assets/echoforge-logo.png" alt="EchoForge Icon" class="logo-icon" />
+      EchoForge
+    </div>
     <nav>
       <a href="#" onclick="openModal('login')">Login</a>
       <a href="#" onclick="openModal('signup')">Sign Up</a>
