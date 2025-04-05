@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +28,6 @@
       const password = document.querySelector('.modal input[type=password]').value;
       const errorText = document.getElementById('authError');
       errorText.textContent = '';
-
       const successText = document.getElementById('authSuccess');
       successText.textContent = '';
 
@@ -63,11 +63,21 @@
         });
     }
 
-    const modal = document.getElementById('authModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const submitBtn = document.getElementById('submitBtn');
-    const switchText = document.getElementById('switchText');
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = 'index.html';
+      });
+    }
+
+    let modal, modalTitle, submitBtn, switchText;
     let currentMode = 'login';
+
+    window.onload = () => {
+      modal = document.getElementById('authModal');
+      modalTitle = document.getElementById('modalTitle');
+      submitBtn = document.getElementById('submitBtn');
+      switchText = document.getElementById('switchText');
+    };
 
     function openModal(mode) {
       modal.style.display = 'flex';
@@ -131,6 +141,18 @@
     }
     nav a:hover {
       color: #4A00E0;
+    }
+    .logout-btn {
+      background: transparent;
+      border: 1px solid #ccc;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-left: 20px;
+    }
+    .logout-btn:hover {
+      background: #f2f2f2;
     }
     .hero {
       text-align: center;
@@ -284,6 +306,7 @@
     <nav>
       <a href="#" onclick="openModal('login')">Login</a>
       <a href="#" onclick="openModal('signup')">Sign Up</a>
+      <button class="logout-btn" onclick="logout()">Log Out</button>
     </nav>
   </header>
   <section class="hero">
