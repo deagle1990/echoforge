@@ -35,7 +35,7 @@
         auth.createUserWithEmailAndPassword(email, password)
           .then(() => {
             successText.textContent = 'Account created successfully!';
-            setTimeout(() => closeModal(), 1000);
+            setTimeout(() => window.location.href = 'dashboard.html', 1000);
           })
           .catch(err => {
             errorText.textContent = err.message;
@@ -44,45 +44,84 @@
         auth.signInWithEmailAndPassword(email, password)
           .then(() => {
             successText.textContent = 'Login successful!';
-            setTimeout(() => closeModal(), 1000);
+            setTimeout(() => window.location.href = 'dashboard.html', 1000);
           })
           .catch(err => {
             errorText.textContent = err.message;
           });
       }
     }
+
+    function googleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(() => {
+          window.location.href = 'dashboard.html';
+        })
+        .catch(err => {
+          document.getElementById('authError').textContent = err.message;
+        });
+    }
+
+    const modal = document.getElementById('authModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const submitBtn = document.getElementById('submitBtn');
+    const switchText = document.getElementById('switchText');
+    let currentMode = 'login';
+
+    function openModal(mode) {
+      modal.style.display = 'flex';
+      setMode(mode);
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    function switchMode(toMode) {
+      setMode(toMode);
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('authError').textContent = '';
+      document.getElementById('authSuccess').textContent = '';
+      if (mode === 'signup') {
+        modalTitle.innerText = 'Sign Up';
+        submitBtn.innerText = 'Sign Up';
+        switchText.innerHTML = 'Already have an account? <a onclick="switchMode(\'login\')">Login</a>';
+      } else {
+        modalTitle.innerText = 'Login';
+        submitBtn.innerText = 'Login';
+        switchText.innerHTML = "Don't have an account? <a onclick=\"switchMode('signup')\">Sign Up</a>";
+      }
+    }
+
+    function backgroundClick(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    }
   </script>
   <style>
-    :root {
-      --accent: #4A00E0;
-      --accent-hover: #7f00ff;
-      --bg: #f9f9fb;
-      --text: #222;
-      --card: #ffffff;
-      --shadow: rgba(0, 0, 0, 0.06);
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      background: #f9f9fb;
+      color: #222;
     }
     header {
-      background-color: var(--card);
+      background-color: #fff;
       padding: 20px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 6px var(--shadow);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
     .logo {
       font-size: 1.75rem;
       font-weight: 600;
-      color: var(--accent);
+      color: #4A00E0;
     }
     nav a {
       margin-left: 24px;
@@ -91,7 +130,7 @@
       font-weight: 500;
     }
     nav a:hover {
-      color: var(--accent);
+      color: #4A00E0;
     }
     .hero {
       text-align: center;
@@ -111,10 +150,10 @@
     .generator {
       max-width: 600px;
       margin: 0 auto 80px;
-      background: var(--card);
+      background: white;
       padding: 40px;
       border-radius: 16px;
-      box-shadow: 0 8px 30px var(--shadow);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
     }
     .generator label {
       display: block;
@@ -130,7 +169,7 @@
       font-size: 1rem;
     }
     .generate-btn {
-      background: var(--accent);
+      background: #4A00E0;
       color: white;
       border: none;
       padding: 14px 24px;
@@ -138,11 +177,9 @@
       font-size: 1.1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
     }
     .generate-btn:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
+      background: #7f00ff;
     }
     .footer {
       text-align: center;
@@ -166,13 +203,12 @@
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
       width: 360px;
       max-width: 90%;
-      animation: fadeIn 0.3s ease-in-out;
       position: relative;
       text-align: center;
     }
     .modal h2 {
       margin-top: 0;
-      color: var(--accent);
+      color: #4A00E0;
     }
     .auth-error {
       color: red;
@@ -194,7 +230,7 @@
     }
     .modal button {
       width: 100%;
-      background: var(--accent);
+      background: #4A00E0;
       color: white;
       border: none;
       padding: 12px;
@@ -203,13 +239,27 @@
       font-weight: 600;
       cursor: pointer;
     }
+    .google-btn {
+      background: white;
+      color: #444;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .google-btn:hover {
+      background: #f0f0f0;
+    }
     .modal .switch {
       margin-top: 12px;
       text-align: center;
       font-size: 0.9rem;
     }
     .modal .switch a {
-      color: var(--accent);
+      color: #4A00E0;
       cursor: pointer;
     }
     .close-btn {
@@ -225,10 +275,6 @@
     }
     .close-btn:hover {
       background: #ddd;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
@@ -276,51 +322,11 @@
       <input type="email" placeholder="Email">
       <input type="password" placeholder="Password">
       <button id="submitBtn" onclick="authSubmit(currentMode)">Login</button>
+      <button class="google-btn" onclick="googleLogin()">Continue with Google</button>
       <div class="switch">
         <span id="switchText">Don't have an account? <a onclick="switchMode('signup')">Sign Up</a></span>
       </div>
     </div>
   </div>
-  <script>
-    const modal = document.getElementById('authModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const submitBtn = document.getElementById('submitBtn');
-    const switchText = document.getElementById('switchText');
-    let currentMode = 'login';
-
-    function openModal(mode) {
-      modal.style.display = 'flex';
-      setMode(mode);
-    }
-
-    function closeModal() {
-      modal.style.display = 'none';
-    }
-
-    function switchMode(toMode) {
-      setMode(toMode);
-    }
-
-    function setMode(mode) {
-      currentMode = mode;
-      document.getElementById('authError').textContent = '';
-      document.getElementById('authSuccess').textContent = '';
-      if (mode === 'signup') {
-        modalTitle.innerText = 'Sign Up';
-        submitBtn.innerText = 'Sign Up';
-        switchText.innerHTML = 'Already have an account? <a onclick="switchMode(\'login\')">Login</a>';
-      } else {
-        modalTitle.innerText = 'Login';
-        submitBtn.innerText = 'Login';
-        switchText.innerHTML = "Don't have an account? <a onclick=\"switchMode('signup')\">Sign Up</a>";
-      }
-    }
-
-    function backgroundClick(e) {
-      if (e.target === modal) {
-        closeModal();
-      }
-    }
-  </script>
 </body>
 </html>
