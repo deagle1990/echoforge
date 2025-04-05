@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EchoForge</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAnAsYhLGH4EuxTgXIDDXN38LRz_v1UHog",
+      authDomain: "echoforge-cc55c.firebaseapp.com",
+      projectId: "echoforge-cc55c",
+      storageBucket: "echoforge-cc55c.appspot.com",
+      messagingSenderId: "410909167738",
+      appId: "1:410909167738:web:ffefb72b258ead738b6bc3",
+      measurementId: "G-TR19DTKSNC"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function authSubmit(mode) {
+      const email = document.querySelector('.modal input[type=email]').value;
+      const password = document.querySelector('.modal input[type=password]').value;
+      const errorText = document.getElementById('authError');
+      errorText.textContent = '';
+
+      const successText = document.getElementById('authSuccess');
+      successText.textContent = '';
+
+      if (mode === 'signup') {
+        auth.createUserWithEmailAndPassword(email, password)
+          .then(() => {
+            successText.textContent = 'Account created successfully!';
+            setTimeout(() => closeModal(), 1000);
+          })
+          .catch(err => {
+            errorText.textContent = err.message;
+          });
+      } else {
+        auth.signInWithEmailAndPassword(email, password)
+          .then(() => {
+            successText.textContent = 'Login successful!';
+            setTimeout(() => closeModal(), 1000);
+          })
+          .catch(err => {
+            errorText.textContent = err.message;
+          });
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --accent: #4A00E0;
+      --accent-hover: #7f00ff;
+      --bg: #f9f9fb;
+      --text: #222;
+      --card: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.06);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      background-color: var(--card);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px var(--shadow);
+    }
+    .logo {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    nav a {
+      margin-left: 24px;
+      text-decoration: none;
+      color: #555;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    .hero {
+      text-align: center;
+      padding: 100px 20px 60px;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: #555;
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+    .generator {
+      max-width: 600px;
+      margin: 0 auto 80px;
+      background: var(--card);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px var(--shadow);
+    }
+    .generator label {
+      display: block;
+      margin: 20px 0 10px;
+      font-weight: 600;
+    }
+    .generator select, .generator input[type=range] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+    }
+    .generate-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .generate-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 0.9rem;
+      color: #999;
+    }
+    .modal-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      width: 360px;
+      max-width: 90%;
+      animation: fadeIn 0.3s ease-in-out;
+      position: relative;
+      text-align: center;
+    }
+    .modal h2 {
+      margin-top: 0;
+      color: var(--accent);
+    }
+    .auth-error {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    .auth-success {
+      color: green;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    .modal input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .modal button {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .modal .switch {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .modal .switch a {
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #eee;
+      color: #666;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .close-btn:hover {
+      background: #ddd;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">EchoForge</div>
+    <nav>
+      <a href="#" onclick="openModal('login')">Login</a>
+      <a href="#" onclick="openModal('signup')">Sign Up</a>
+    </nav>
+  </header>
+  <section class="hero">
+    <h1>Generate Music Instantly</h1>
+    <p>Choose your vibe, and let EchoForge craft your unique sound.</p>
+  </section>
+  <section class="generator">
+    <label for="genre">Genre</label>
+    <select id="genre">
+      <option>Chill</option>
+      <option>Lo-fi</option>
+      <option>EDM</option>
+      <option>Hip-Hop</option>
+      <option>Ambient</option>
+    </select>
+    <label for="mood">Mood</label>
+    <select id="mood">
+      <option>Uplifting</option>
+      <option>Melancholic</option>
+      <option>Dark</option>
+      <option>Peaceful</option>
+    </select>
+    <label for="tempo">Tempo</label>
+    <input type="range" id="tempo" min="60" max="180" value="100">
+    <button class="generate-btn">Generate Track</button>
+  </section>
+  <div class="footer">
+    &copy; 2025 EchoForge. All rights reserved.
+  </div>
+  <div class="modal-bg" id="authModal" onclick="backgroundClick(event)">
+    <div class="modal">
+      <div class="close-btn" onclick="closeModal()">&times;</div>
+      <h2 id="modalTitle">Login</h2>
+      <div id="authSuccess" class="auth-success"></div>
+      <div id="authError" class="auth-error"></div>
+      <input type="email" placeholder="Email">
+      <input type="password" placeholder="Password">
+      <button id="submitBtn" onclick="authSubmit(currentMode)">Login</button>
+      <div class="switch">
+        <span id="switchText">Don't have an account? <a onclick="switchMode('signup')">Sign Up</a></span>
+      </div>
+    </div>
+  </div>
+  <script>
+    const modal = document.getElementById('authModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const submitBtn = document.getElementById('submitBtn');
+    const switchText = document.getElementById('switchText');
+    let currentMode = 'login';
+
+    function openModal(mode) {
+      modal.style.display = 'flex';
+      setMode(mode);
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    function switchMode(toMode) {
+      setMode(toMode);
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('authError').textContent = '';
+      document.getElementById('authSuccess').textContent = '';
+      if (mode === 'signup') {
+        modalTitle.innerText = 'Sign Up';
+        submitBtn.innerText = 'Sign Up';
+        switchText.innerHTML = 'Already have an account? <a onclick="switchMode(\'login\')">Login</a>';
+      } else {
+        modalTitle.innerText = 'Login';
+        submitBtn.innerText = 'Login';
+        switchText.innerHTML = "Don't have an account? <a onclick=\"switchMode('signup')\">Sign Up</a>";
+      }
+    }
+
+    function backgroundClick(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    }
+  </script>
+</body>
+</html>
